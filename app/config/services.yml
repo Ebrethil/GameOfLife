@@ -29,7 +29,29 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    # add more services, or override services that need manual wiring
-    # AppBundle\Service\ExampleService:
-    #     arguments:
-    #         $someArgument: 'some_value'
+    ### Mein DI Geschwobel: ###
+    app.entity.living_cell:
+        class: AppBundle\Entity\LivingCell
+
+    ### Parameter richtig übergeben??? ###
+    app.entity.temporary_calculation_cell:
+        class: AppBundle\Entity\TemporaryCalculationCell
+        arguments: ['@?', '@?']
+
+    app.neighbour_position_discovery:
+        class: AppBundle\NeighbourPositionDiscovery
+
+    app.game_rule_executor:
+        class: AppBundle\GameRuleExecutor
+
+    app.entity.game_state:
+        class: AppBundle\Entity\GameState
+
+    app.next_cycle_generator:
+        class: AppBundle\NextCycleGenerator
+
+    app.game_logic_processor:
+        class: AppBundle\GameLogicProcessor
+        arguments:
+            - '@app.next_cycle_generator'
+            - '@app.game_rule_executor'
