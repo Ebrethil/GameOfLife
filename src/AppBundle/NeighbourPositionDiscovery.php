@@ -3,9 +3,7 @@
 
 namespace AppBundle;
 
-use AppBundle\Entity\GameState;
-use AppBundle\Entity\LivingCell;
-use AppBundle\Entity\TemporaryCalculationCell;
+use AppBundle\Entity\Board;
 
 /**
  * Class NeighbourPositionDiscovery
@@ -44,16 +42,17 @@ class NeighbourPositionDiscovery
 
 
     /**
-     * @param LivingCell $livingCell
+     * @param string $posKey
+     * @param $board
      * @return array
      */
-    public function discover(LivingCell $livingCell)
+    public function discover(string $posKey, Board $board) :array
     {
+        //TODO: Add gameBorder to neighbour calculation!
         $neighboursPositions = [];
-        $centerPosX = $livingCell->getPosX();
-        $centerPosY = $livingCell->getPosY();
-        $lastPosX = $centerPosX;
-        $lastPosY = $centerPosY;
+        $coordinates = $this->getCoordinatesByKey($posKey);
+        $lastPosX = $coordinates['posX'];
+        $lastPosY = $coordinates['posY'];
 
         foreach ($this->neighbourVectorPath as $nextDirection) {
             $vectorCount = $nextDirection['count'];
@@ -75,4 +74,20 @@ class NeighbourPositionDiscovery
 
         return $neighboursPositions;
     }
+
+    /**
+     * @param string $posKey
+     * @return array
+     */
+    private function getCoordinatesByKey(string $posKey) :array
+    {
+        $i = mb_strrpos($posKey, '/');
+        $posX = mb_substr($posKey, 0, $i-1);
+        $posY = mb_substr($posKey, $i);
+        return [
+            'posX' => $posX,
+            'posY' => $posY,
+        ];
+    }
+
 }
